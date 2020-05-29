@@ -5,3 +5,4 @@ NVMeFix_v1.0.2.kext
 VirtualSMC_v1.1.3.kext
 VoodooPS2Controller_v2.1.4.kext
 WhateverGreen_v1.3.9.kext
+ACPIBatteryManager.kext RehabMan-Battery-2018-1005

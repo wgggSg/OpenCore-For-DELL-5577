@@ -20,7 +20,7 @@ DefinitionBlock ("", "SSDT", 2, "OCLT", "TPD1", 0x00000000)
     Scope (_SB.PCI0.I2C0)
     {
         Name (SSCN, Package () { 432, 507, 30 })
-Name (FMCN, Package () { 72, 160, 30 })
+        Name (FMCN, Package () { 72, 160, 30 })
 
         Device (TPD1)
         {

@@ -39,7 +39,6 @@ DefinitionBlock ("", "SSDT", 2, "hack", "BATT", 0x00000000)
 
     Scope (_SB.PCI0.LPCB.EC)
     {
-        
         OperationRegion (XCRM, EmbeddedControl, Zero, 0x0100) //ECRM
         Field (XCRM, ByteAcc, Lock, Preserve) //ECRM
         {
