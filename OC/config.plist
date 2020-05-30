@@ -877,6 +877,7 @@
 	<dict>
 		<key>BlessOverride</key>
 		<array>
+			<string>\EFI\Microsoft\Boot\bootmgfw.efi</string>
 		</array>
 		<key>Boot</key>
 		<dict>
@@ -1089,7 +1090,7 @@
 			<key>SystemSerialNumber</key>
 			<string>C02TJ0B8HTD5</string>
 			<key>SystemUUID</key>
-			<string>F94B1AB6-2A70-46C8-850F-2B6E6B7ABED9</string>
+			<string></string>
 		</dict>
 		<key>UpdateDataHub</key>
 		<true/>
@@ -1098,7 +1099,7 @@
 		<key>UpdateSMBIOS</key>
 		<true/>
 		<key>UpdateSMBIOSMode</key>
-		<string>Create</string>
+		<string>Custom</string>
 	</dict>
 	<key>UEFI</key>
 	<dict>
