@@ -850,7 +850,7 @@
 			<key>AppleXcpmForceBoost</key>
 			<false/>
 			<key>CustomSMBIOSGuid</key>
-			<false/>
+			<true/>
 			<key>DisableIoMapper</key>
 			<true/>
 			<key>DisableRtcChecksum</key>
@@ -1090,7 +1090,7 @@
 			<key>SystemSerialNumber</key>
 			<string>C02TJ0B8HTD5</string>
 			<key>SystemUUID</key>
-			<string></string>
+			<string>F94B1AB6-2A70-46C8-850F-2B6E6B7ABED9</string>
 		</dict>
 		<key>UpdateDataHub</key>
 		<true/>
