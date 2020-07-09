@@ -32,7 +32,7 @@
 
 ### 2020.07.09 更新 `OpenCore` release 0.5.9 及部分驱动版本
 * `VoodooPS2Controller` v2.1.5 添加 `Win`+`PrtScr`以关闭触摸板
-* 其他驱动版本见 */OC/Kexts/version.txt*
+* 其他驱动版本见 **/OC/Kexts/version.txt**
 
 ### 2020.06.15 完善
 * 给 `ALC256` 注入新的layout id（21），可以使用耳机插孔了！！！（但耳麦不行）
