@@ -1,9 +1,10 @@
 AirportBrcmFixup_v2.0.7.kext
 AppleALC_v1.5.0.kext
-Lilu_v1.4.4_Debug.kext
+Lilu_v1.4.5_Debug.kext
 NVMeFix_v1.0.2.kext
 VirtualSMC_v1.1.3.kext
-VoodooPS2Controller_v2.1.4.kext
-WhateverGreen_v1.3.9.kext
+VoodooPS2Controller-2.1.5-RELEASE
+VoodooI2C-2.4.3
+WhateverGreen-1.4.0-RELEASE
 ACPIBatteryManager.kext RehabMan-Battery-2018-1005
 CPUFriend-1.2.0-DEBUG

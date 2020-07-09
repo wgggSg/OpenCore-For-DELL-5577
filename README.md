@@ -29,6 +29,11 @@
 目前已经有驱动Intel网卡的方法了，所以不换网卡也可以用wifi了（有需求的同学可以研究研究～ 理论上Clover与OpenCore驱动通用，只不过OpenCore添加驱动需要配置`config.plist`），但是会导致pcie通道被占用，所以一旦打开Intel的黑果WiFi，nvme固态会贼卡（达芬奇跑分写入不到50m/s），尝试驱动的同学如果遇到这个问题不要被困扰（感谢`zakejune`同学提醒）
 
 ## 日志
+
+### 2020.07.09 更新 `OpenCore` release 0.5.9 及部分驱动版本
+* `VoodooPS2Controller` v2.1.5 添加 `Win`+`PrtScr`以关闭触摸板
+* 其他驱动版本见 */OC/Kexts/version.txt*
+
 ### 2020.06.15 完善
 * 给 `ALC256` 注入新的layout id（21），可以使用耳机插孔了！！！（但耳麦不行）
 * 尝试使用 `CPUFriend` 给cpu添加变频 （貌似亮屏省电效果不是很明显）
