@@ -1,10 +1,13 @@
-AirportBrcmFixup_v2.0.7.kext
-AppleALC_v1.5.0.kext
-Lilu_v1.4.5_Debug.kext
-NVMeFix_v1.0.2.kext
-VirtualSMC_v1.1.3.kext
-VoodooPS2Controller-2.1.5-RELEASE
-VoodooI2C-2.4.3
-WhateverGreen-1.4.0-RELEASE
-ACPIBatteryManager.kext RehabMan-Battery-2018-1005
+AirportBrcmFixup-2.1.2-RELEASE
+AppleALC-1.5.5-RELEASE
+BrcmPatchRAM-2.5.5
 CPUFriend-1.2.0-DEBUG
+Lilu-1.5.0-DEBUG
+NVMeFix-1.0.4-RELEASE
+RealtekRTL8111-V2.3.0-RELEASE
+VirtualSMC-1.1.9-RELEASE
+VoodooI2C-2.6.1
+VoodooPS2Controller-2.1.9-RELEASE
+WhateverGreen-1.4.5-RELEASE
+ACPIBatteryManager.kext RehabMan-Battery-2018-1005
+USBInjectAll-0.7.5

@@ -23,12 +23,18 @@
   我给电脑先后更换了不少硬件，一些硬件和DELL5577原配置有所差别，不过感觉除了网卡（***BCM94352z***），换的硬件都是对无关紧要的，同型号食用应该问题不大。
 
 ## Tips *提示及注意事项*
-* UEFI引导项的添加  
+* **UEFI** 引导项的添加  
 在EFI分区下复制 `/OC` 文件夹及覆盖 `/Boot` 文件夹，引导文件为 `/Boot/Bootx64.efi`（不是类似于Clover添加`/OC/OpenCore.efi`）
-* 关于 DELL 5577 原生 Intel 网卡  
-目前已经有驱动Intel网卡的方法了，所以不换网卡也可以用wifi了（有需求的同学可以研究研究～ 理论上Clover与OpenCore驱动通用，只不过OpenCore添加驱动需要配置`config.plist`），但是会导致pcie通道被占用，所以一旦打开Intel的黑果WiFi，nvme固态会贼卡（达芬奇跑分写入不到50m/s），尝试驱动的同学如果遇到这个问题不要被困扰（感谢`zakejune`同学提醒）
+* 关于 **DELL 5577** 原生 **Intel** 网卡  
+目前已经有驱动 Intel 网卡的方法了，所以不换网卡也可以用 wifi 了（有需求的同学可以研究研究～ 理论上 Clover 与 OpenCore 驱动通用，只不过 OpenCore 添加驱动需要配置 `config.plist` ），但是会导致Pci-E通道被占用，所以一旦打开 Intel 的黑果 WiFi ，nvme 固态会贼卡（达芬奇跑分写入不到50m/s），尝试驱动的同学如果遇到这个问题不要被困扰（感谢`zakejune`同学提醒）
 
 ## 日志
+
+### 2021.01.06 更新 `OpenCore` release 0.6.5 及大部分**kext**驱动版本
+* 可以安装 MacOS **Big Sur**
+* 驱动版本见 **/OC/Kexts/version.txt**
+* 耳机插孔是可以用的
+* 开机还是经常会有DELL自检问题（Memory Changed）但是不影响使用，不知道怎么解决啊啊啊qwq
 
 ### 2020.07.09 更新 `OpenCore` release 0.5.9 及部分驱动版本
 * `VoodooPS2Controller` v2.1.5 添加 `Win`+`PrtScr`以关闭触摸板
@@ -71,3 +77,9 @@
   * win引导问题
 ##
     感谢黑果大佬们的教程及排错经验！
+
+## 扶贫
+如果我的分享对你有帮助，可以请我喝肥宅快乐水来支持我！（：xiexie！！
+支付宝|微信
+---|---
+![Catalina 2019-10-12 PM10.58.21](https://raw.githubusercontent.com/wgggSg/OpenCore-For-DELL-5577/master/Pictures/alipay.jpg)|![Catalina 2019-10-12 PM10.58.21](https://raw.githubusercontent.com/wgggSg/OpenCore-For-DELL-5577/master/Pictures/wxpay.png)

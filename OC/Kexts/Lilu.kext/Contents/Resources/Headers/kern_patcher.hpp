@@ -18,8 +18,7 @@
 
 namespace Patch { union All; void deleter(All * NONNULL); }
 #ifdef LILU_KEXTPATCH_SUPPORT
-struct OSKextLoadedKextSummaryHeader;
-struct OSKextLoadedKextSummary;
+union OSKextLoadedKextSummaryHeaderAny;
 #endif /* LILU_KEXTPATCH_SUPPORT */
 
 class KernelPatcher {
@@ -148,8 +147,10 @@ public:
 	 *  @param slide loaded slide
 	 *  @param size  loaded memory size
 	 *  @param force force recalculatiob
+	 *
+	 *  @return new size
 	 */
-	EXPORT void updateRunningInfo(size_t id, mach_vm_address_t slide=0, size_t size=0, bool force=false);
+	EXPORT size_t updateRunningInfo(size_t id, mach_vm_address_t slide=0, size_t size=0, bool force=false);
 
 	/**
 	 *  Any kernel
@@ -220,6 +221,73 @@ public:
 		}
 
 		return (T)nullptr;
+	}
+    
+    /**
+     *  Solve request to resolve multiple symbols in one shot and simplify error handling
+     *
+     *  @seealso solveMultiple().
+     */
+    struct SolveRequest {
+        /**
+         *  The symbol to solve
+         */
+        const char *symbol {nullptr};
+        
+        /**
+         *  The symbol address on success, otherwise NULL.
+         */
+        mach_vm_address_t *address {nullptr};
+        
+        /**
+         *  Construct a solve request conveniently
+         */
+        template <typename T>
+        SolveRequest(const char *s, T &addr) :
+			symbol(s), address(reinterpret_cast<mach_vm_address_t*>(&addr)) { }
+    };
+	
+	/**
+	 *  Solve multiple functions with basic error handling
+	 *
+	 *  @param id        loaded kinfo id
+	 *  @param requests  an array of requests to solve
+	 *  @param num       requests array size
+	 *  @param start     start address range
+	 *  @param size      address range size
+	 *  @param crash     kernel panic on invalid non-zero address
+	 *  @param force     continue on first error
+	 *
+	 *  @return false if at least one symbol cannot be solved.
+	 */
+	inline bool solveMultiple(size_t id, SolveRequest *requests, size_t num, mach_vm_address_t start, size_t size, bool crash=false, bool force=false) {
+		for (size_t index = 0; index < num; index++) {
+			auto result = solveSymbol(id, requests[index].symbol, start, size, crash);
+			if (result) {
+				*requests[index].address = result;
+			} else {
+				clearError();
+				if (!force) return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 *  Solve multiple functions with basic error handling
+	 *
+	 *  @param id        loaded kinfo id
+	 *  @param requests  an array of requests to solve
+	 *  @param start     start address range
+	 *  @param size      address range size
+	 *  @param crash     kernel panic on invalid non-zero address
+	 *  @param force     continue on first error
+	 *
+	 *  @return false if at least one symbol cannot be solved.
+	 */
+	template <size_t N>
+	inline bool solveMultiple(size_t id, SolveRequest (&requests)[N], mach_vm_address_t start, size_t size, bool crash=false, bool force=false) {
+		return solveMultiple(id, requests, N, start, size, crash, force);
 	}
 
 	/**
@@ -406,6 +474,16 @@ public:
 		template <typename T>
 		RouteRequest(const char *s, T t, mach_vm_address_t &o) :
 			symbol(s), to(reinterpret_cast<mach_vm_address_t>(t)), org(&o) { }
+		
+		/**
+		 *  Construct RouteRequest for wrapping a function
+		 *  @param s  symbol to lookup
+		 *  @param t  destination address
+		 *  @param o  trampoline storage to the original symbol
+		 */
+		template <typename T, typename O>
+		RouteRequest(const char *s, T t, O &o) :
+			RouteRequest(s, t, reinterpret_cast<mach_vm_address_t&>(o)) { }
 
 		/**
 		 *  Construct RouteRequest for routing a function
@@ -520,7 +598,8 @@ private:
 	enum class JumpType {
 		Auto,
 		Long,
-		Short
+		Short,
+		Medium
 	};
 
 	/**
@@ -541,7 +620,7 @@ private:
 	/**
 	 *  Patcher status
 	 */
-	bool activated {false};
+	_Atomic(bool) activated = false;
 
 	/**
 	 *  Read previous jump destination from function
@@ -573,10 +652,12 @@ private:
 	 *  @param kernelRoute  kernel change requiring memory protection changes and patch reverting at unload
 	 *  @param revertible   patches could be reverted
 	 *  @param jumpType     jump type to use, relative short or absolute long
+	 *  @param info         info to access address slots to use for shorter routing
+	 *  @param org          write pointer to this variable
 	 *
 	 *  @return wrapper pointer or 0 on success
 	 */
-	mach_vm_address_t routeFunctionInternal(mach_vm_address_t from, mach_vm_address_t to, bool buildWrapper=false, bool kernelRoute=true, bool revertible=true, JumpType jumpType=JumpType::Auto);
+	mach_vm_address_t routeFunctionInternal(mach_vm_address_t from, mach_vm_address_t to, bool buildWrapper=false, bool kernelRoute=true, bool revertible=true, JumpType jumpType=JumpType::Auto, MachInfo *info=nullptr, mach_vm_address_t *org=nullptr);
 
 	/**
 	 *  Simple route multiple functions with basic error handling with long routes
@@ -603,7 +684,7 @@ private:
 	/**
 	 *  A pointer to loaded kext information
 	 */
-	OSKextLoadedKextSummaryHeader **loadedKextSummaries {nullptr};
+	OSKextLoadedKextSummaryHeaderAny **loadedKextSummaries {nullptr};
 
 	/**
 	 *  A pointer to kext summaries update
@@ -616,7 +697,7 @@ private:
 	 *  @param summaries loaded kext summaries
 	 *  @param num       number of loaded kext summaries
 	 */
-	void processAlreadyLoadedKexts(OSKextLoadedKextSummary *summaries, size_t num);
+	void processAlreadyLoadedKexts(OSKextLoadedKextSummaryHeaderAny *summaries, size_t num);
 
 #endif /* LILU_KEXTPATCH_SUPPORT */
 
@@ -646,6 +727,11 @@ private:
 	 */
 	bool waitingForAlreadyLoadedKexts {false};
 
+	/**
+	 *  Number of processed kext summaries
+	 */
+	uint32_t numSummaries {0};
+
 #endif /* LILU_KEXTPATCH_SUPPORT */
 
 	/**
@@ -659,8 +745,42 @@ private:
 	 */
 	static constexpr size_t SmallJump {1 + sizeof(int32_t)};
 	static constexpr size_t LongJump {6 + sizeof(uint64_t)};
+	static constexpr size_t MediumJump {6};
 	static constexpr uint8_t SmallJumpPrefix {0xE9};
 	static constexpr uint16_t LongJumpPrefix {0x25FF};
+
+	/**
+	 * Atomic trampoline generator, wraps jumper into 64-bit or 128-bit storage
+	 */
+	union FunctionPatch {
+		struct PACKED LongPatch {
+			uint16_t opcode;
+			uint32_t argument;
+			uint64_t disp;
+			uint8_t  org[2];
+		} l;
+		static_assert(sizeof(l) == sizeof(unsigned __int128), "Invalid long patch rounding");
+		struct PACKED MediumPatch {
+			uint16_t opcode;
+			uint32_t argument;
+			uint8_t  org[2];
+		} m;
+		static_assert(sizeof(m) == sizeof(uint64_t), "Invalid medium patch rounding");
+		struct PACKED SmallPatch {
+			uint8_t opcode;
+			uint32_t argument;
+			uint8_t org[3];
+		} s;
+		static_assert(sizeof(s) == sizeof(uint64_t), "Invalid small patch rounding");
+		template <typename T>
+		inline void sourceIt(mach_vm_address_t source) {
+			// Note, this one violates strict aliasing, but we play with the memory anyway.
+			for (size_t i = 0; i < sizeof(T::org); ++i)
+				reinterpret_cast<volatile T *>(this)->org[i] = *reinterpret_cast<uint8_t *>(source + offsetof(T, org) + i);
+		}
+		uint64_t value64;
+		unsigned __int128 value128;
+	} patch;
 
 	/**
 	 *  Possible kernel paths
