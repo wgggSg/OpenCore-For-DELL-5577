@@ -32,7 +32,6 @@
 
 ### 2021.01.08 完善 `NVRAM`
 * 完善 `NVRAM` 配置
-* 尝试解锁 **CFG LOCK** （貌似效果不大
 
 ### 2021.01.06 更新 `OpenCore` release 0.6.5 及大部分**kext**驱动版本
 * 可以安装 MacOS **Big Sur**
